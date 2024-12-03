@@ -1,9 +1,3 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[13]:
-
-
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -15,9 +9,6 @@ import numpy as np
 import pickle
 
 
-# In[15]:
-
-
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 num_epochs = 20
 batch_size = 32
@@ -25,8 +16,6 @@ learning_rate = 0.001
 X = []
 Y = []
 
-
-# In[16]:
 
 
 pickle_in = open("X2.pickle","rb")
@@ -42,13 +31,8 @@ classes = pickle.load(pickle_in)
 pickle_in.close()
 
 
-# In[19]:
-
-
 label_amount = len(classes)
 
-
-# In[21]:
 
 
 #class cardDataset():
@@ -92,8 +76,6 @@ class ConvNet(torch.nn.Module):
         return x
 
 
-# In[23]:
-
 
 images_tensor = torch.tensor(X)
 X = []
@@ -101,55 +83,31 @@ labels_tensor = torch.tensor(Y)
 Y = []
 
 
-# In[24]:
-
-
 images_tensor = images_tensor.permute(0, 3, 1, 2)
 images_tensor = images_tensor.float()
 
-
-# In[25]:
 
 
 images_tensor /= 255.0
 
 
-# In[26]:
-
-
 dataset = TensorDataset(images_tensor, labels_tensor)
-
-
-# In[27]:
 
 
 train_size = int(0.8 * len(dataset))
 test_size = len(dataset) - train_size
 
 
-# In[29]:
-
-
 train_dataset, test_dataset = random_split(dataset, [train_size, test_size])
-
-
-# In[30]:
 
 
 train_loader = DataLoader(train_dataset, batch_size = batch_size, shuffle = True)
 test_loader = DataLoader(test_dataset, batch_size = batch_size, shuffle = False)
 
-
-# In[31]:
-
-
 model = ConvNet(num_classes = label_amount).to(device)
 criterion = nn.CrossEntropyLoss()
 optimizer = torch.optim.SGD(model.parameters(), lr=learning_rate)
 n_total_steps = len(train_loader)
-
-
-# In[49]:
 
 
 for epoch in range(num_epochs):
@@ -170,14 +128,8 @@ for epoch in range(num_epochs):
 print('Finished Training!')
 
 
-# In[51]:
-
-
 PATH = './cnn.pth'
 torch.save(model.state_dict(), PATH)
-
-
-# In[61]:
 
 
 with torch.no_grad():
@@ -208,16 +160,3 @@ with torch.no_grad():
         if n_class_samples[i] != 0:
             acc = 100.0 * n_class_correct[i] / n_class_samples[i]
             print(f'Accuracy of {classes[i]}: {acc} %')
-
-
-# In[47]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
